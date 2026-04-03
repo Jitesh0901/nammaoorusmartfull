@@ -1,8 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import "../styles/Hero.css";
+import { useNavigate } from "react-router-dom";
 
-export default function Hero({ onExplore }) {
+export default function Hero() {
+  const navigate = useNavigate();
+  const handleExplore = () => {
+    navigate("/home");
+    setTimeout(() => {
+      document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
   return (
     <section
       id="home"
@@ -58,7 +65,7 @@ export default function Hero({ onExplore }) {
                 boxShadow: "0 0 25px rgba(52, 211, 153, 0.6)",
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={onExplore}
+              onClick={handleExplore}
               className="group relative px-8 py-3.5 md:px-10 md:py-4 bg-white text-slate-900 text-base md:text-lg font-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-emerald-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 mx-auto overflow-hidden"
             >
               <span className="relative z-10 tracking-wide uppercase">

@@ -5,13 +5,10 @@ import ProductsPage from "./ProductsPage.jsx";
 const TrustStats = lazy(() => import("../components/TrustStats.jsx"));
 const BrandsStrip = lazy(() => import("../components/BrandsStrip.jsx"));
 
-export default function HomePage({ onNavigate, scrollToProduct }) {
+export default function HomePage() {
   return (
     <>
-      <Hero
-        onExplore={() => onNavigate("products")}
-        onContact={() => onNavigate("contact")}
-      />
+      <Hero />
 
       <Suspense fallback={null}>
         <TrustStats />

@@ -2,7 +2,6 @@ import { useEffect, useState, lazy, Suspense, useCallback } from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
-import ProductDetailModal from "./components/ProductDetailModal.jsx";
 import WhatsAppFloat from "./components/WhatsAppFloat.jsx";
 import HomePage from "./pages/HomePage.jsx";
 
@@ -26,14 +25,12 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showBillPage, setShowBillPage] = useState(false);
   const [customerInfo, setCustomerInfo] = useState(null);
   const [lang, setLang] = useState("en");
   const [shopName, setShopName] = useState("NAMMA OORU");
 
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const { addToast } = useToast();
   const { cart, removeFromCart, updateQuantity, clearCart, addToCart } = useCart();
 
@@ -71,22 +68,6 @@ export default function App() {
     navigate("/");
   }, [clearCart, navigate]);
 
-  const scrollToProduct = useCallback(
-    (productId) => {
-      if (pathname !== "/") {
-        navigate("/");
-      }
-      setTimeout(() => {
-        const card = document.getElementById(`product-card-${productId}`);
-        if (card) {
-          card.scrollIntoView({ behavior: "smooth", block: "center" });
-          card.classList.add("ring-4", "ring-green-500");
-          setTimeout(() => card.classList.remove("ring-4", "ring-green-500"), 2000);
-        }
-      }, 500);
-    },
-    [navigate, pathname],
-  );
 
   if (showBillPage && cart.length > 0) {
     return (
@@ -121,18 +102,11 @@ export default function App() {
         lang={lang}
         shopName={shopName}
       />
-      <ProductDetailModal
-        product={selectedProduct}
-        isOpen={!!selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        onAddToCart={addToCart}
-      />
-
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<HomePage onNavigate={() => {}} scrollToProduct={scrollToProduct} />} />
-          <Route path="/services" element={<Suspense fallback={<div className="h-screen" />}><ServicesPage onScrollToProduct={scrollToProduct} /></Suspense>} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/services" element={<Suspense fallback={<div className="h-screen" />}><ServicesPage /></Suspense>} />
           <Route path="/contact" element={<Suspense fallback={<div className="h-screen" />}><ContactPage /></Suspense>} />
         </Routes>
       </div>

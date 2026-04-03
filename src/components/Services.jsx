@@ -7,94 +7,148 @@ import {
   Droplets,
   Leaf,
   Wrench,
+  ThermometerSnowflake,
+  Settings,
 } from "lucide-react";
-import SectionTitle from "./SectionTitle.jsx";
 
+// Redesigned to exactly match the airy, white, 3-column reference design.
 const SERVICES = [
   {
-    title: "Solar projects and hybrid solar",
+    title: "Solar Projects & Hybrid Solar",
     icon: <Sun className="w-6 h-6 text-yellow-500" />,
-    desc: "Complete solar solutions for grid-independence.",
-    targetProduct: "hybrid-solar",
+    desc: "End-to-end solar infrastructure designed for ultimate grid-independence and sustainable energy.",
+    color: "bg-yellow-50",
+    dot: "bg-green-300",
   },
   {
-    title: "Heat pumps",
+    title: "Heat Pumps",
     icon: <Zap className="w-6 h-6 text-orange-500" />,
-    desc: "Efficient water heating for all seasons.",
-    targetProduct: "heat-pump",
+    desc: "Efficient, climate-friendly water heating systems extracting natural heat from the air.",
+    color: "bg-orange-50",
+    dot: "bg-green-100",
   },
   {
-    title: "Solar water heater",
+    title: "Solar Water Heater",
     icon: <Sun className="w-6 h-6 text-red-500" />,
-    desc: "Save electricity with solar hot water.",
-    targetProduct: "solar-heater",
+    desc: "Harness solar thermal energy to eliminate water heating costs completely.",
+    color: "bg-red-50",
+    dot: "bg-transparent",
   },
   {
-    title: "Inverter battery",
+    title: "Inverter Battery",
     icon: <Battery className="w-6 h-6 text-blue-500" />,
-    desc: "Long-lasting backups for your home.",
-    targetProduct: "inverter-battery",
+    desc: "Robust solid-state power backups for uninterrupted home energy supply.",
+    color: "bg-blue-50",
+    dot: "bg-transparent",
   },
   {
-    title: "CCTV camera",
-    icon: <Camera className="w-6 h-6 text-slate-700" />,
-    desc: "Secure your premises with HD surveillance.",
-    targetProduct: "cctv-system",
+    title: "CCTV Systems",
+    icon: <Camera className="w-6 h-6 text-slate-600" />,
+    desc: "High-definition, encrypted surveillance for continuous premises monitoring.",
+    color: "bg-slate-100",
+    dot: "bg-transparent",
   },
   {
-    title: "Water purifier",
+    title: "Water Purifier",
     icon: <Droplets className="w-6 h-6 text-cyan-500" />,
-    desc: "Pure & safe drinking water solutions.",
-    targetProduct: "water-purifier",
+    desc: "Advanced multi-stage RO filtration for 100% pure drinking water.",
+    color: "bg-cyan-50",
+    dot: "bg-transparent",
   },
   {
-    title: "Water softener",
-    icon: <Leaf className="w-6 h-6 text-teal-500" />,
-    desc: "Treat hard water for better health.",
-    targetProduct: "water-softener",
+    title: "Water Softener",
+    icon: <Leaf className="w-6 h-6 text-emerald-500" />,
+    desc: "Chemical-free treatment to transform hard water into soft, healthy supply.",
+    color: "bg-emerald-50",
+    dot: "bg-transparent",
   },
   {
-    title: "Robotic vacuum cleaner",
+    title: "Robotic Vacuum",
     icon: <Wrench className="w-6 h-6 text-indigo-500" />,
-    desc: "Smart cleaning for modern homes.",
-    targetProduct: "robotic-vacuum",
+    desc: "Intelligent automated cleaning systems with advanced spatial mapping.",
+    color: "bg-indigo-50",
+    dot: "bg-transparent",
+  },
+  {
+    title: "AC Maintenance",
+    icon: <ThermometerSnowflake className="w-6 h-6 text-sky-500" />,
+    desc: "Expert cooling optimizations, gas refills, and deep chemical servicing.",
+    color: "bg-sky-50",
+    dot: "bg-transparent",
+  },
+  {
+    title: "General Appliances",
+    icon: <Settings className="w-6 h-6 text-gray-400" />,
+    desc: "Comprehensive diagnostic and repair services for all household electronics.",
+    color: "bg-gray-100",
+    dot: "bg-transparent",
   },
 ];
 
-export default function Services({ onScrollToProduct }) {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 40, opacity: 0, scale: 0.95 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1], // Custom smooth flowing ease
+    },
+  },
+};
+
+export default function Services() {
   return (
-    <section
-      id="services"
-      className="py-12 md:py-32 bg-white relative overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <SectionTitle
-          title="Complete Smart Solutions"
-          subtitle="End-to-end installation & maintenance."
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section className="bg-transparent pb-10">
+      <motion.div 
+        className="max-w-[1400px] mx-auto px-6"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {SERVICES.map((service, idx) => (
             <motion.div
               key={idx}
-              whileHover={{ scale: 1.02, x: 5 }}
-              onClick={() => onScrollToProduct(service.targetProduct)}
-              className="flex items-center p-4 rounded-lg border border-gray-100 bg-white shadow-sm hover:shadow-lg hover:border-green-100 cursor-pointer transition-all gap-3"
+              variants={itemVariants}
+              whileHover={{ y: -5, transition: { duration: 0.2, ease: "easeOut" } }}
+              className="group relative p-8 sm:p-10 rounded-[2.5rem] bg-white border border-slate-50 shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col items-start"
             >
-              <div className="p-2 rounded-lg bg-green-50 text-green-600 shrink-0">
+              {/* Top right indicator dot based on reference image */}
+              {service.dot !== "bg-transparent" && (
+                 <div className={`absolute top-8 right-8 w-1.5 h-1.5 rounded-full ${service.dot}`} />
+              )}
+
+              {/* Icon Container */}
+              <div className={`w-14 h-14 mb-8 rounded-[1.25rem] ${service.color} flex items-center justify-center`}>
                 {service.icon}
               </div>
-              <div className="min-w-0">
-                <h4 className="text-sm font-bold text-slate-900 truncate">
-                  {service.title}
-                </h4>
-                <p className="text-xs text-slate-500 truncate">
-                  {service.desc}
-                </p>
-              </div>
+              
+              {/* Typography matching reference perfectly */}
+              <h4 className="text-xl sm:text-[1.35rem] font-black text-[#1e293b] mb-4 tracking-tight leading-snug">
+                {service.title}
+              </h4>
+              
+              <p className="text-[#64748b] leading-[1.8] text-[0.95rem] font-medium pr-4">
+                {service.desc}
+              </p>
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
+

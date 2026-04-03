@@ -33,11 +33,11 @@ export default function Bill({
 
   const companyData = {
     name: "NAMMA OORU SMART SOLUTIONS",
-    tagline: "Smart Energy & Automation",
+    tagline: "Smart Energy",
     address: "", // Address removed as per request
     mobile: "+91 8883785516",
     email: "contact@nammaooru.com",
-    website: "www.nammaooru.com",
+    website: "www.nammaaooru.com",
   };
 
   // Calculate total (no GST for now, can be added)
@@ -110,7 +110,7 @@ export default function Bill({
     str +=
       n[5] != 0
         ? (str != "" ? "and " : "") +
-          (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]])
+        (a[Number(n[5])] || b[n[5][0]] + " " + a[n[5][1]])
         : "";
     return str.trim();
   };
@@ -238,7 +238,7 @@ Authorized Signatory
               </div>
               <div className="text-left md:text-right flex flex-col items-start md:items-end w-full md:w-auto">
                 <img
-                  src="./logo_new.png"
+                  src="./logo_new.webp"
                   alt="Logo"
                   className="h-20 w-auto mb-2 object-contain"
                 />

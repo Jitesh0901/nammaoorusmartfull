@@ -1,4 +1,5 @@
 import { useEffect, useState, lazy, Suspense, useCallback } from "react";
+import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
 import ProductDetailModal from "./components/ProductDetailModal.jsx";
@@ -6,9 +7,20 @@ import WhatsAppFloat from "./components/WhatsAppFloat.jsx";
 import HomePage from "./pages/HomePage.jsx";
 
 const Bill = lazy(() => import("./pages/Bill.jsx"));
+const ServicesPage = lazy(() => import("./pages/ServicesPage.jsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
+const Footer = lazy(() => import("./components/Footer.jsx"));
 
 import { useToast } from "./context/ToastContext";
 import { useCart } from "./context/CartContext";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,9 +32,10 @@ export default function App() {
   const [lang, setLang] = useState("en");
   const [shopName, setShopName] = useState("NAMMA OORU");
 
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { addToast } = useToast();
-  const { cart, removeFromCart, updateQuantity, clearCart, addToCart } =
-    useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, addToCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -55,52 +68,29 @@ export default function App() {
     setShowBillPage(false);
     clearCart();
     setCustomerInfo(null);
-    scrollToSection("home");
-  }, [clearCart]);
-
-  const scrollToSection = useCallback((id) => {
-    setIsMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 100;
-      const elementPosition =
-        element.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: elementPosition - offset, behavior: "smooth" });
-    }
-  }, []);
+    navigate("/");
+  }, [clearCart, navigate]);
 
   const scrollToProduct = useCallback(
     (productId) => {
-      scrollToSection("products");
+      if (pathname !== "/") {
+        navigate("/");
+      }
       setTimeout(() => {
         const card = document.getElementById(`product-card-${productId}`);
         if (card) {
           card.scrollIntoView({ behavior: "smooth", block: "center" });
           card.classList.add("ring-4", "ring-green-500");
-          setTimeout(
-            () => card.classList.remove("ring-4", "ring-green-500"),
-            2000,
-          );
+          setTimeout(() => card.classList.remove("ring-4", "ring-green-500"), 2000);
         }
-      }, 300);
+      }, 500);
     },
-    [scrollToSection],
-  );
-
-  const onNavigate = useCallback(
-    (id) => scrollToSection(id),
-    [scrollToSection],
+    [navigate, pathname],
   );
 
   if (showBillPage && cart.length > 0) {
     return (
-      <Suspense
-        fallback={
-          <div className="min-h-screen flex items-center justify-center">
-            Loading...
-          </div>
-        }
-      >
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
         <Bill
           cartItems={cart}
           customerInfo={customerInfo}
@@ -112,7 +102,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white font-sans overflow-x-hidden text-slate-900">
+    <div className="min-h-screen bg-white font-sans overflow-x-hidden text-slate-900 flex flex-col">
+      <ScrollToTop />
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -127,7 +118,6 @@ export default function App() {
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
         onCartOpen={() => setIsCartOpen(true)}
-        onNavigate={onNavigate}
         lang={lang}
         shopName={shopName}
       />
@@ -138,9 +128,20 @@ export default function App() {
         onAddToCart={addToCart}
       />
 
-      <HomePage onNavigate={onNavigate} scrollToProduct={scrollToProduct} />
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<HomePage onNavigate={() => {}} scrollToProduct={scrollToProduct} />} />
+          <Route path="/services" element={<Suspense fallback={<div className="h-screen" />}><ServicesPage onScrollToProduct={scrollToProduct} /></Suspense>} />
+          <Route path="/contact" element={<Suspense fallback={<div className="h-screen" />}><ContactPage /></Suspense>} />
+        </Routes>
+      </div>
 
       <WhatsAppFloat count={cart.length} onClick={() => setIsCartOpen(true)} />
+      
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }

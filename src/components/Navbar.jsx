@@ -3,42 +3,61 @@ import {
   Menu,
   X,
   ShoppingCart,
-  ArrowRight,
-  Search,
-  User,
   ChevronDown,
 } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 // 🖼️ CHANGE LOGO HERE: Update the path inside the quotes.
-import logo from "../assets/images/logo_new.png";
+import logo from "../assets/images/logo.webp";
 import "../styles/Navbar.css";
-// const logo = '/logo_new.png'
+
 export default function Navbar({
   scrolled,
   cartCount,
   isMenuOpen,
   setIsMenuOpen,
   onCartOpen,
-  onNavigate,
   lang,
   shopName,
 }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const navItems = [
-    { name: "Home", id: "home" },
-    { name: "Products", id: "products" },
-    { name: "Services", id: "services" },
-    { name: "Mission", id: "mission" },
-    { name: "Contact", id: "contact" },
+    { name: "Home", path: "/home" },
+    { name: "Products", path: "/home#products" },
+    { name: "Services", path: "/services" },
+    { name: "Contact", path: "/contact" },
   ];
+
+  const handleNavigate = (path) => {
+    setIsMenuOpen(false);
+    if (path.includes("#")) {
+        const [basePath, hash] = path.split("#");
+        if (location.pathname !== basePath) {
+            navigate(basePath);
+        }
+        setTimeout(() => {
+            const el = document.getElementById(hash);
+            if (el) {
+                const offset = 100;
+                const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: elementPosition - offset, behavior: "smooth" });
+            }
+        }, 300);
+    } else {
+        navigate(path);
+    }
+  };
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-500 ease-in-out ${scrolled ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100" : "bg-transparent"}`}
+      className={`fixed w-full z-50 transition-all duration-500 ease-in-out ${scrolled || location.pathname !== "/" ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100" : "bg-transparent"}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 md:h-24">
           <div
             className="flex items-center cursor-pointer gap-3"
-            onClick={() => onNavigate("home")}
+            onClick={() => handleNavigate("/")}
           >
             <motion.img
               whileHover={{ rotate: 5, scale: 1.08 }}
@@ -69,16 +88,24 @@ export default function Navbar({
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className="text-sm font-bold uppercase tracking-widest relative group transition-colors text-slate-800 hover:text-green-600"
-              >
-                {item.name}
-                <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-green-500 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.path === "/" 
+                  ? location.pathname === "/" 
+                  : item.path === "/#products" 
+                      ? location.hash === "#products"
+                      : location.pathname === item.path;
+
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavigate(item.path)}
+                  className={`text-sm font-bold uppercase tracking-widest relative group transition-colors hover:text-green-600 ${isActive ? "text-green-600" : "text-slate-800"}`}
+                >
+                  {item.name}
+                  <span className={`absolute -bottom-2 left-0 h-0.5 bg-green-500 transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+                </button>
+              )
+            })}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -148,7 +175,6 @@ export default function Navbar({
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed inset-0 bg-white z-[100] flex flex-col min-h-screen overflow-y-auto"
           >
-            {/* Top Header Bar - Minimal: Just Close Button */}
             <div className="flex items-center justify-end px-6 py-6 border-b border-slate-50">
               <button
                 onClick={() => setIsMenuOpen(false)}
@@ -158,26 +184,21 @@ export default function Navbar({
               </button>
             </div>
 
-            {/* Menu Items - Full View */}
             <div className="flex flex-col px-6 pt-6 gap-2">
               {navItems.map((item, idx) => (
                 <motion.button
-                  key={item.id}
+                  key={item.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + idx * 0.05 }}
-                  onClick={() => {
-                    onNavigate(item.id);
-                    setIsMenuOpen(false);
-                  }}
-                  // Clean, premium list style
+                  onClick={() => handleNavigate(item.path)}
                   className="w-full text-left py-5 border-b border-slate-100 flex items-center justify-between group active:scale-[0.99] transition-transform"
                 >
                   <div className="flex flex-col items-start gap-1">
                     <span className="text-2xl font-bold text-slate-900 group-hover:text-green-700 transition-colors tracking-tight">
                       {item.name}
                     </span>
-                    {item.id === "products" && (
+                    {item.name === "Products" && (
                       <span className="bg-[#1b5e20] text-white text-[9px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
                         Season Deals
                       </span>
@@ -185,13 +206,12 @@ export default function Navbar({
                   </div>
                   <ChevronDown
                     size={24}
-                    className="text-slate-300 group-hover:text-green-700 transition-colors"
+                    className="text-slate-300 group-hover:text-green-700 transition-colors -rotate-90"
                   />
                 </motion.button>
               ))}
             </div>
 
-            {/* No footer, clean space */}
             <div className="flex-grow bg-slate-50/30 mt-8"></div>
           </motion.div>
         )}

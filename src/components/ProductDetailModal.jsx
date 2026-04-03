@@ -105,17 +105,14 @@ export default function ProductDetailModal({
                     className="flex-1 bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 relative group cursor-zoom-in flex items-center justify-center p-4 sm:sticky sm:top-4 self-start h-[40vh] sm:h-[calc(90vh-100px)] min-h-[250px] sm:min-h-[300px]"
                     onClick={() => setIsLightboxOpen(true)}
                   >
-                    {/* Loader */}
-                    <div
-                      className={`absolute inset-0 flex items-center justify-center bg-white transition-opacity duration-300 ${isImageLoading ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"}`}
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center bg-white -z-10">
                       <div className="w-10 h-10 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin"></div>
                     </div>
 
                     <motion.img
                       key={activeImageIndex}
                       initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: isImageLoading ? 0 : 1, scale: 1 }}
+                      animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
                       src={
                         imgErrors[activeImageIndex]
@@ -123,22 +120,20 @@ export default function ProductDetailModal({
                           : galleryImages[activeImageIndex]
                       }
                       alt={product.name}
-                      onLoad={() => setIsImageLoading(false)}
                       onError={() => {
                         setImgErrors((prev) => ({
                           ...prev,
                           [activeImageIndex]: true,
                         }));
-                        setIsImageLoading(false);
                       }}
-                      className="max-w-full max-h-full object-contain shadow-sm group-hover:scale-105 transition-transform duration-500 rounded-lg"
+                      className="max-w-full max-h-full object-contain shadow-sm group-hover:scale-105 transition-transform duration-500 rounded-lg relative z-10"
                       loading="eager"
                       decoding="async"
                       fetchpriority="high"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center z-20 pointer-events-none">
                       <span
-                        className={`opacity-0 ${!isImageLoading ? "group-hover:opacity-100" : ""} bg-white/90 text-slate-900 text-xs font-bold px-3 py-1 rounded-full shadow-lg transition-opacity transform translate-y-2 group-hover:translate-y-0`}
+                        className="opacity-0 group-hover:opacity-100 bg-white/90 text-slate-900 text-xs font-bold px-3 py-1 rounded-full shadow-lg transition-opacity transform translate-y-2 group-hover:translate-y-0"
                       >
                         Tap to Zoom
                       </span>

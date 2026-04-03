@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, Share2, ArrowLeft } from "lucide-react";
 
-const LOGO = encodeURI("/log png.png");
+const LOGO = encodeURI("/log png.webp");
 
 function formatCurrency(v) {
   return Number(v || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 });

@@ -49,9 +49,16 @@ export default function Navbar({
     }
   };
 
+  const isHome = location.pathname === "/home";
+  const isTransparent = isHome && !scrolled;
+
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-500 ease-in-out ${scrolled || location.pathname !== "/" ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100" : "bg-transparent"}`}
+      className={`fixed w-full z-50 transition-all duration-500 ease-in-out ${
+        isTransparent
+          ? "bg-transparent"
+          : "bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 md:h-24">
@@ -82,7 +89,9 @@ export default function Navbar({
                   {shopName}
                 </motion.span>
               </AnimatePresence>
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.25em] text-black drop-shadow-sm">
+              <span className={`text-[10px] md:text-xs font-black uppercase tracking-[0.25em] drop-shadow-sm ${
+                isTransparent ? "text-white/80" : "text-black"
+              }`}>
                 Smart Solutions
               </span>
             </div>
@@ -99,7 +108,13 @@ export default function Navbar({
                 <button
                   key={item.name}
                   onClick={() => handleNavigate(item.path)}
-                  className={`text-sm font-bold uppercase tracking-widest relative group transition-colors hover:text-green-600 ${isActive ? "text-green-600" : "text-slate-800"}`}
+                  className={`text-sm font-bold uppercase tracking-widest relative group transition-colors hover:text-green-400 ${
+                    isActive
+                      ? "text-green-400"
+                      : isTransparent
+                      ? "text-white/90"
+                      : "text-slate-800"
+                  }`}
                 >
                   {item.name}
                   <span className={`absolute -bottom-2 left-0 h-0.5 bg-green-500 transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`}></span>
@@ -128,7 +143,9 @@ export default function Navbar({
           <div className="md:hidden flex items-center gap-4">
             <button
               onClick={onCartOpen}
-              className="relative p-2 text-slate-900 hover:bg-slate-50 rounded-full transition-colors"
+              className={`relative p-2 rounded-full transition-colors hover:bg-white/10 ${
+                isTransparent ? "text-white" : "text-slate-900 hover:bg-slate-50"
+              }`}
             >
               <ShoppingCart size={26} strokeWidth={2} />
               {cartCount > 0 && (
@@ -139,7 +156,9 @@ export default function Navbar({
             </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-slate-900 p-2 hover:bg-slate-50 rounded-full transition-colors z-50 relative"
+              className={`p-2 rounded-full transition-colors z-50 relative hover:bg-white/10 ${
+                isTransparent ? "text-white" : "text-slate-900 hover:bg-slate-50"
+              }`}
             >
               <AnimatePresence mode="wait">
                 {isMenuOpen ? (

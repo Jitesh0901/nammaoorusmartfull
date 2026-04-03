@@ -1,14 +1,21 @@
-import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import '../styles/Hero.css'
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import "../styles/Hero.css";
 
 export default function Hero({ onExplore }) {
   return (
-    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section
+      id="home"
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+    >
       {/* Background Images */}
       <div className="absolute inset-0 overflow-hidden">
         <picture className="w-full h-full relative z-0">
-          <source media="(max-width: 768px)" srcSet="./home-m.webp" type="image/webp" />
+          <source
+            media="(max-width: 768px)"
+            srcSet="./home-m.webp"
+            type="image/webp"
+          />
           <img
             src="./home.webp"
             alt="Smart Home Energy"
@@ -36,7 +43,8 @@ export default function Hero({ onExplore }) {
           </h1>
 
           <p className="text-lg sm:text-xl md:text-xl lg:text-2xl text-slate-100 mb-8 max-w-2xl mx-auto font-medium drop-shadow-md hidden md:block">
-            Transform your living space with intelligent, sustainable energy solutions designed for the future.
+            Transform your living space with intelligent, sustainable energy
+            solutions designed for the future.
           </p>
 
           <motion.div
@@ -45,18 +53,27 @@ export default function Hero({ onExplore }) {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(52, 211, 153, 0.6)" }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 25px rgba(52, 211, 153, 0.6)",
+              }}
               whileTap={{ scale: 0.95 }}
               onClick={onExplore}
               className="group relative px-8 py-3.5 md:px-10 md:py-4 bg-white text-slate-900 text-base md:text-lg font-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-emerald-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 mx-auto overflow-hidden"
             >
-              <span className="relative z-10 tracking-wide uppercase">Explore Products</span>
-              <ArrowRight size={22} strokeWidth={2.5} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+              <span className="relative z-10 tracking-wide uppercase">
+                Explore Products
+              </span>
+              <ArrowRight
+                size={22}
+                strokeWidth={2.5}
+                className="relative z-10 group-hover:translate-x-1 transition-transform"
+              />
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out" />
             </motion.button>
           </motion.div>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

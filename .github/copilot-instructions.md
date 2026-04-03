@@ -24,7 +24,7 @@ This repository is a small React + Vite single-page app (Tailwind CSS) that show
   - Animations use `framer-motion` patterns (see `motion` usages in `ProductCard` and `Products`). Keep animation props consistent with existing small durations and subtle transforms.
   - Icons use `lucide-react` — prefer reusing `lucide` icon components rather than importing other icon sets.
   - Global toasts: use the `ToastProvider`/`useToast()` pattern in `src/App.jsx` (call `addToast(message)` to show notifications).
-  - Product DOM IDs: product cards use `id={\`product-card-${product.id}\`}` — keep this exact format if you rely on `scrollToProduct` behavior.
+  - Product DOM IDs: product cards use `id={\`product-card-${product.id}\`}`— keep this exact format if you rely on`scrollToProduct` behavior.
 
 - **Data & integration notes**:
   - `src/data/products.js` provides a fallback dataset and supports runtime injection via `window.PRODUCTS`. Production environments may inject `window.PRODUCTS` into the page to replace the static data.
@@ -60,4 +60,4 @@ This repository is a small React + Vite single-page app (Tailwind CSS) that show
   - `scrollToProduct` relies on DOM ids and a 600ms timeout to allow layout. If you change rendering timing or lazy-loading, adjust the timeout or use `IntersectionObserver` instead.
   - No automated tests are present; validate changes locally using `npm run dev` and `npm run build` + `npm run preview`.
 
-If any piece of this guidance is unclear or you'd like more examples (e.g., where to add Firebase hooks or how to extend product data shape), tell me which area to expand and I'll iterate. 
+If any piece of this guidance is unclear or you'd like more examples (e.g., where to add Firebase hooks or how to extend product data shape), tell me which area to expand and I'll iterate.

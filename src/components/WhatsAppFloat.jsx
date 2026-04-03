@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart } from 'lucide-react'
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
 
 export default function WhatsAppFloat({ count, onClick }) {
   return (
@@ -12,7 +12,10 @@ export default function WhatsAppFloat({ count, onClick }) {
       className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[80] bg-slate-900 text-white p-3 md:p-4 rounded-full shadow-2xl flex items-center justify-center group border-2 border-white/20 hover:border-green-400 transition-colors"
     >
       <div className="relative">
-        <ShoppingCart className="w-5 h-5 md:w-7 md:h-7 fill-none group-hover:fill-white/10 transition-colors" strokeWidth={2} />
+        <ShoppingCart
+          className="w-5 h-5 md:w-7 md:h-7 fill-none group-hover:fill-white/10 transition-colors"
+          strokeWidth={2}
+        />
         <AnimatePresence>
           {count > 0 && (
             <motion.span
@@ -32,5 +35,5 @@ export default function WhatsAppFloat({ count, onClick }) {
         View Cart
       </span>
     </motion.button>
-  )
+  );
 }

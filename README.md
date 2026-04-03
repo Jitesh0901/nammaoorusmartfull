@@ -3,6 +3,7 @@
 Welcome! This guide is designed to help you easily manage and edit the website. You don't need to be an expert coder to make changes. Just follow the instructions below.
 
 ## 🚀 How to Start the Website
+
 1. **Open the Terminal**: Open your command prompt (cmd) or VS Code terminal in the project folder.
 2. **Run the Command**: Type the following command and press Enter:
    ```bash
@@ -13,6 +14,7 @@ Welcome! This guide is designed to help you easily manage and edit the website. 
 ---
 
 ## 📦 Project Structure
+
 Here are the most important files you will need to edit:
 
 - **`src/data/products.js`**: Contains all the products displayed on the website. **(Edit this to add/remove products)**.
@@ -24,6 +26,7 @@ Here are the most important files you will need to edit:
 ---
 
 ## 🛒 How to Add a New Product
+
 1. Open `src/data/products.js`.
 2. Scroll to the top, where you will see a **Template**.
 3. Copy the template and paste it inside the `window.PRODUCTS` list.
@@ -38,17 +41,19 @@ Here are the most important files you will need to edit:
 ---
 
 ## 🖼️ How to Change the Logo
+
 1. Put your new logo image in the `src/assets/images/` folder.
 2. Open `src/components/Navbar.jsx`.
 3. Look for this line near the top:
    ```javascript
-   const logo = '/your-logo-name.png'
+   const logo = "/your-logo-name.png";
    ```
 4. Change the filename to your new logo's name.
 
 ---
 
 ## 📞 How to Edit Contact Details
+
 1. Open `src/components/ContactSection.jsx`.
 2. Scroll down to find the **Address**, **Phone**, and **Email** sections.
 3. Change the text inside the quotes `'...'` to update them.
@@ -56,11 +61,14 @@ Here are the most important files you will need to edit:
 ---
 
 ## 🎨 Changing Colors
-The website uses **Tailwind CSS**. 
+
+The website uses **Tailwind CSS**.
+
 - To change text colors, look for classes like `text-red-500` or `text-blue-600`.
 - To change background colors, look for classes like `bg-slate-900` or `bg-white`.
 
 ---
 
 ### Need Help?
+
 If something breaks, you can generally undo your last change by pressing `Ctrl + Z`.

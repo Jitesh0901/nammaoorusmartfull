@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 export default defineConfig({
-  base: './',
+  base: "./",
   plugins: [
     react(),
     ViteImageOptimizer({
@@ -24,10 +24,10 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    strictPort: false
+    strictPort: false,
   },
   build: {
-    minify: 'terser',
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
@@ -37,24 +37,24 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'motion-vendor': ['framer-motion'],
-          'icons-vendor': ['lucide-react'],
+          "react-vendor": ["react", "react-dom"],
+          "motion-vendor": ["framer-motion"],
+          "icons-vendor": ["lucide-react"],
         },
         assetFileNames: (assetInfo) => {
-          let extType = assetInfo.name.split('.').at(1);
+          let extType = assetInfo.name.split(".").at(1);
           if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(extType)) {
-            extType = 'images';
+            extType = "images";
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
+        chunkFileNames: "assets/js/[name]-[hash].js",
+        entryFileNames: "assets/js/[name]-[hash].js",
       },
     },
     chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion', 'lucide-react'],
+    include: ["react", "react-dom", "framer-motion", "lucide-react"],
   },
-})
+});

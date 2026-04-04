@@ -1,45 +1,63 @@
-import { useEffect, useState, lazy, Suspense, useCallback } from "react";
+import { useEffect, useState, lazy, Suspense, useCallback, useRef } from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import CartDrawer from "./components/CartDrawer.jsx";
 import WhatsAppFloat from "./components/WhatsAppFloat.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import LoadingScreen from "./components/LoadingScreen.jsx";
+import { useLoading } from "./context/LoadingContext.jsx";
+import { useToast } from "./context/ToastContext";
+import { useCart } from "./context/CartContext";
 
 const Bill = lazy(() => import("./pages/Bill.jsx"));
 const ServicesPage = lazy(() => import("./pages/ServicesPage.jsx"));
 const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
 const Footer = lazy(() => import("./components/Footer.jsx"));
 
-import { useToast } from "./context/ToastContext";
-import { useCart } from "./context/CartContext";
-
+// Scrolls to top on every route change
 function ScrollToTop() {
   const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
+// Triggers loading screen on every route change
+function RouteChangeLoader() {
+  const { pathname } = useLocation();
+  const { triggerLoader } = useLoading();
+  const isFirst = useRef(true);
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    // Skip on very first mount — initial load handled separately
+    if (isFirst.current) { isFirst.current = false; return; }
+    triggerLoader(800); // fast for route changes
+  }, [pathname, triggerLoader]);
+
   return null;
 }
 
 export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen]   = useState(false);
+  const [scrolled, setScrolled]       = useState(false);
+  const [isCartOpen, setIsCartOpen]   = useState(false);
   const [showBillPage, setShowBillPage] = useState(false);
   const [customerInfo, setCustomerInfo] = useState(null);
-  const [lang, setLang] = useState("en");
-  const [shopName, setShopName] = useState("NAMMA OORU");
+  const [lang, setLang]               = useState("en");
+  const [shopName, setShopName]       = useState("NAMMA OORU");
 
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { cart, removeFromCart, updateQuantity, clearCart, addToCart } = useCart();
+  const { loading, triggerLoader } = useLoading();
 
+  // ── Scroll shadow for Navbar ──
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ── Bilingual shop name toggle ──
   useEffect(() => {
     const interval = setInterval(
       () => setLang((p) => (p === "en" ? "ta" : "en")),
@@ -52,9 +70,17 @@ export default function App() {
     setShopName(lang === "en" ? "NAMMA OORU" : "நம்ம ஊரு");
   }, [lang]);
 
+  // ── Initial page load — show loader once per session ──
+  useEffect(() => {
+    if (!sessionStorage.getItem("loaderSeen")) {
+    triggerLoader(2000); // 2s for first load
+      sessionStorage.setItem("loaderSeen", "1");
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleCheckout = useCallback(
-    (customerInfo) => {
-      setCustomerInfo(customerInfo);
+    (info) => {
+      setCustomerInfo(info);
       setShowBillPage(true);
       addToast("Proceeding to invoice...", "success");
     },
@@ -67,7 +93,6 @@ export default function App() {
     setCustomerInfo(null);
     navigate("/");
   }, [clearCart, navigate]);
-
 
   if (showBillPage && cart.length > 0) {
     return (
@@ -84,7 +109,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans overflow-x-hidden text-slate-900 flex flex-col">
+      {/* Global loading overlay */}
+      <LoadingScreen visible={loading} />
+
       <ScrollToTop />
+      <RouteChangeLoader />
+
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -102,6 +132,7 @@ export default function App() {
         lang={lang}
         shopName={shopName}
       />
+
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
@@ -112,7 +143,7 @@ export default function App() {
       </div>
 
       <WhatsAppFloat count={cart.length} onClick={() => setIsCartOpen(true)} />
-      
+
       <Suspense fallback={null}>
         <Footer />
       </Suspense>

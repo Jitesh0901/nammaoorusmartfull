@@ -5,14 +5,17 @@ import "./styles/Global.css";
 import { BrowserRouter } from "react-router-dom";
 import { ToastProvider } from "./context/ToastContext";
 import { CartProvider } from "./context/CartContext";
+import { LoadingProvider } from "./context/LoadingContext";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ToastProvider>
       <CartProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <LoadingProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </LoadingProvider>
       </CartProvider>
     </ToastProvider>
   </React.StrictMode>,

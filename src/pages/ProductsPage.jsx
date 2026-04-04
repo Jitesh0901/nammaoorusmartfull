@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Plus, Minus } from "lucide-react";
 import SectionTitle from "../components/SectionTitle.jsx";
@@ -6,11 +6,18 @@ import ImageWithFallback from "../components/ImageWithFallback.jsx";
 import ProductDetailModal from "../components/ProductDetailModal.jsx";
 import { PRODUCTS, CATEGORIES } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useLoading } from "../context/LoadingContext.jsx";
 
 const ProductsPage = memo(() => {
   const [filterCategory, setFilterCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { cart, addToCart, updateQuantity } = useCart();
+  const { triggerLoader } = useLoading();
+
+  const openProduct = useCallback((product) => {
+    triggerLoader(700);
+    setTimeout(() => setSelectedProduct(product), 200);
+  }, [triggerLoader]);
 
   const categories = useMemo(
     () => ["All", ...Object.values(CATEGORIES || {})],
@@ -63,7 +70,7 @@ const ProductsPage = memo(() => {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, margin: "100px" }}
               id={`product-card-${product.id}`}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => openProduct(product)}
               className="group rounded-3xl overflow-hidden bg-white border border-slate-100 shadow-md hover:shadow-xl transition-all duration-200 flex flex-col cursor-pointer will-change-transform"
             >
               <div className="aspect-square relative bg-gray-50 overflow-hidden">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sun, 
@@ -72,57 +72,79 @@ const SLIDES = [
 
 export default function CompanyShowcase() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const directionRef = useRef(1); // 1 = forward (left→right), -1 = backward
 
-  // Auto-slide every 8 seconds
+  const goTo = (idx) => {
+    directionRef.current = idx > activeIdx ? 1 : -1;
+    setActiveIdx(idx);
+  };
+
+  // Auto-slide every 8 seconds — always forward
   useEffect(() => {
     const timer = setInterval(() => {
+      directionRef.current = 1;
       setActiveIdx((prev) => (prev + 1) % SLIDES.length);
     }, 8000);
     return () => clearInterval(timer);
   }, []);
 
+  const slideVariants = {
+    enter: { x: directionRef.current * 100 + "%", opacity: 0 },
+    center: { x: "0%", opacity: 1 },
+    exit:  { x: directionRef.current * -100 + "%", opacity: 0 },
+  };
+
   return (
-    <section className="relative w-full h-[80vh] md:h-screen overflow-hidden bg-white flex items-center">
-      {/* Background Images with AnimatePresence for crossfade */}
-      <AnimatePresence mode="wait">
+    <section className="relative w-full h-[85vh] md:h-screen overflow-hidden bg-black flex items-center justify-center">
+      {/* Background Images — slide left-to-right */}
+      <AnimatePresence initial={false} custom={directionRef.current}>
         <motion.div
           key={activeIdx}
           className="absolute inset-0 z-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.7, ease: [0.32, 0, 0.24, 1] }}
+          style={{ willChange: "transform, opacity" }}
         >
-          {/* No overlays - showing the direct image as requested */}
           <img
             src={SLIDES[activeIdx].image}
             alt={SLIDES[activeIdx].headline}
             className="w-full h-full object-cover"
+            style={{ display: "block" }}
           />
+          {/* Layered overlay — stronger on mobile for text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 md:from-black/50 md:via-black/30 md:to-black/20" />
         </motion.div>
       </AnimatePresence>
 
-      {/* Main Content (Center) */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center">
+      {/* Main Content (Center) — perfectly centered with bottom offset for mobile dots */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-5 sm:px-8 flex flex-col items-center justify-center text-center pb-16 md:pb-0">
         <motion.div
           key={`headline-${activeIdx}`}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-4"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center gap-3 md:gap-4"
         >
-          <span className="text-yellow-400 font-bold tracking-[0.2em] text-sm md:text-base uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+          {/* Category label */}
+          <span className="inline-block px-3 py-1 rounded-full bg-yellow-400/15 border border-yellow-400/30 text-yellow-300 font-bold tracking-[0.2em] text-[10px] sm:text-xs md:text-sm uppercase shadow-[0_2px_12px_rgba(250,204,21,0.2)]">
             {SLIDES[activeIdx].title}
           </span>
-          <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none max-w-5xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+
+          {/* Main headline */}
+          <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] max-w-xs sm:max-w-2xl md:max-w-5xl" style={{ textShadow: '0 4px 24px rgba(0,0,0,0.8), 0 1px 4px rgba(0,0,0,0.9)' }}>
             {SLIDES[activeIdx].headline}
           </h2>
-          <div className="pt-8 flex flex-col items-center gap-4">
-             <div className="h-1 w-20 bg-yellow-400 shadow-[0_0_15px_rgba(0,0,0,0.3)]" />
-             <p className="text-white font-bold tracking-widest text-xs md:text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] lg:bg-black/20 lg:backdrop-blur-sm lg:px-4 lg:py-1 lg:rounded-full">
-                {SLIDES[activeIdx].desc}
-             </p>
-          </div>
+
+          {/* Accent line */}
+          <div className="h-[3px] w-14 sm:w-20 bg-yellow-400 rounded-full shadow-[0_0_12px_rgba(250,204,21,0.5)] mt-1" />
+
+          {/* Description pill — visible on all screens */}
+          <p className="text-white/90 font-semibold tracking-[0.14em] text-[10px] sm:text-xs md:text-sm uppercase bg-black/35 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/10" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.8)' }}>
+            {SLIDES[activeIdx].desc}
+          </p>
         </motion.div>
       </div>
 
@@ -132,7 +154,7 @@ export default function CompanyShowcase() {
           {SLIDES.map((slide, idx) => (
             <motion.button
               key={slide.id}
-              onClick={() => setActiveIdx(idx)}
+              onClick={() => goTo(idx)}
               className="flex items-center group relative text-left"
               initial={false}
             >
@@ -167,12 +189,12 @@ export default function CompanyShowcase() {
       </div>
 
       {/* Mobile Navigation Indicators (Bottom) */}
-      <div className="absolute bottom-10 inset-x-0 z-30 flex justify-center lg:hidden gap-4">
+      <div className="absolute bottom-8 inset-x-0 z-30 flex justify-center lg:hidden gap-3">
         {SLIDES.map((_, idx) => (
           <button
             key={idx}
-            onClick={() => setActiveIdx(idx)}
-            className={`h-1.5 transition-all rounded-full ${idx === activeIdx ? "w-10 bg-yellow-400" : "w-5 bg-white/40"}`}
+            onClick={() => goTo(idx)}
+            className={`h-1.5 transition-all duration-300 rounded-full ${idx === activeIdx ? "w-10 bg-yellow-400" : "w-4 bg-white/40"}`}
           />
         ))}
       </div>

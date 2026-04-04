@@ -1,15 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
   .spin-root {
-    font-family: 'Inter', sans-serif;
     position: fixed;
     inset: 0;
     z-index: 9999;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: linear-gradient(
@@ -99,57 +96,8 @@ const STYLES = `
     50%      { transform: scale(0.78); opacity: 0.7; }
   }
 
-  /* ── Rotating tick marks on outer ring ── */
-  .spin-tick-wrap {
-    position: absolute;
-    width: 160px;
-    height: 160px;
-    animation: spinCW 1.6s cubic-bezier(0.4,0,0.2,1) infinite;
-  }
-
-  /* ── Brand ── */
-  .spin-brand {
-    text-align: center;
-    margin-top: 36px;
-  }
-  .spin-brand h1 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    background: linear-gradient(135deg, #3730a3 0%, #6366f1 50%, #0891b2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .spin-brand p {
-    margin: 6px 0 0;
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: rgba(6,182,212,0.60);
-  }
-
-  /* ── Status ── */
-  .spin-status {
-    margin-top: 24px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: rgba(55, 65, 120, 0.55);
-  }
-  .spin-status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: conic-gradient(#6366f1, #06b6d4, #6366f1);
-    animation: spinCW 1s linear infinite;
-  }
 `;
+
 
 export default function LoadingScreen({ visible }) {
   return (
@@ -181,28 +129,6 @@ export default function LoadingScreen({ visible }) {
               <div className="spin-ring spin-ring-3" />
               {/* Center dot */}
               <div className="spin-center" />
-            </motion.div>
-
-            {/* Brand */}
-            <motion.div
-              className="spin-brand"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.55, ease: "easeOut" }}
-            >
-              <h1>Namma Ooru</h1>
-              <p>Smart Solutions</p>
-            </motion.div>
-
-            {/* Status */}
-            <motion.div
-              className="spin-status"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.55, duration: 0.5 }}
-            >
-              <span className="spin-status-dot" />
-              Getting things ready…
             </motion.div>
           </motion.div>
         )}

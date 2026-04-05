@@ -76,13 +76,13 @@ export default function ProductDetailModal({
             </button>
             <div className="flex-1 overflow-y-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 p-4 sm:p-6 md:p-10">
-                <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 md:gap-4 h-full">
-                  <div className="flex flex-nowrap sm:flex-col gap-2 md:gap-3 overflow-x-auto sm:overflow-y-auto sm:max-h-[400px] md:max-h-[560px] pb-2 sm:pb-0 w-full scrollbar-hide">
+                <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 md:gap-4">
+                  <div className="flex flex-nowrap sm:flex-col gap-2 md:gap-3 overflow-x-auto sm:overflow-y-auto sm:max-h-[460px] md:max-h-[520px] pb-2 sm:pb-0 shrink-0 scrollbar-hide">
                     {galleryImages.map((img, idx) => (
                       <button
                         key={idx}
                         onClick={() => setActiveImageIndex(idx)}
-                        className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg sm:rounded-xl border-2 overflow-hidden shrink-0 transition-all ${
+                        className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg sm:rounded-xl border-2 overflow-hidden shrink-0 transition-all ${
                           activeImageIndex === idx
                             ? "border-slate-900 ring-2 ring-slate-900/20"
                             : "border-slate-200 hover:border-slate-300"
@@ -102,7 +102,7 @@ export default function ProductDetailModal({
                     ))}
                   </div>
                   <div
-                    className="flex-1 bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 relative group cursor-zoom-in flex items-center justify-center p-4 sm:sticky sm:top-4 self-start h-[40vh] sm:h-[calc(90vh-100px)] min-h-[250px] sm:min-h-[300px]"
+                    className="flex-1 bg-slate-50 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 relative group cursor-zoom-in flex items-center justify-center p-4 min-h-[260px] h-[42vh] sm:h-[420px] lg:h-[500px]"
                     onClick={() => setIsLightboxOpen(true)}
                   >
                     <div className="absolute inset-0 flex items-center justify-center bg-white -z-10">

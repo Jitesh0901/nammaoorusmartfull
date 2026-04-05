@@ -64,7 +64,7 @@ export default function Navbar({
         <div className="flex justify-between items-center h-20 md:h-24">
           <div
             className="flex items-center cursor-pointer gap-3"
-            onClick={() => handleNavigate("/")}
+            onClick={() => handleNavigate("/home")}
           >
             <motion.img
               whileHover={{ rotate: 5, scale: 1.08 }}
@@ -98,11 +98,12 @@ export default function Navbar({
           </div>
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
-              const isActive = item.path === "/" 
-                  ? location.pathname === "/" 
-                  : item.path === "/#products" 
-                      ? location.hash === "#products"
-                      : location.pathname === item.path;
+              const isActive =
+                item.path === "/home"
+                  ? location.pathname === "/home" || location.pathname === "/"
+                  : item.path.includes("#")
+                  ? location.hash === `#${item.path.split("#")[1]}`
+                  : location.pathname === item.path;
 
               return (
                 <button
